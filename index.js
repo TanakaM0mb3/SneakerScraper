@@ -1,6 +1,14 @@
 import puppeteer from 'puppeteer';
-
-//const puppeteer = require('puppeteer');
+import * as fs from 'node:fs';
+import {createObjectCsvWriter} from 'csv-writer';
+const csvWriter = createObjectCsvWriter({
+  path:'results.csv',
+  header: [
+    {id: 'productTitle', title: 'NAME'},
+    {id: 'productDate', title: 'RELEASE-DATE'},
+    {id: 'productPrice', title: 'PRICE'}
+  ]
+});
 
 //start puppeteer
 puppeteer.launch({headless: false}).then(async browser => {
@@ -22,12 +30,12 @@ puppeteer.launch({headless: false}).then(async browser => {
 
       let productTitle = item.querySelector('h3'); 
       let productDate = item.querySelector('p');
-      //let productPrice = item.querySelector('.release-price');
+      
 
       scrapeItems.push({
         productTitle: productTitle ? productTitle.innerText : null,
         productDate: productDate ? productDate.innerText : null,
-        //productPrice: productPrice ? productPrice.innerText : null,
+        
       });
 
     });
@@ -38,6 +46,9 @@ puppeteer.launch({headless: false}).then(async browser => {
 
     return items;
   });
+
+  //convert scraped data into a csv
+  csvWriter.writeRecords(products.relatedProducts).then(() => {console.log('...DONE');});
 
   //ouput scraped data
   console.log(products);

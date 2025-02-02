@@ -14,13 +14,15 @@ const csvWriter = createObjectCsvWriter({
 
 //start puppeteer
 
-puppeteer.launch({headless: false}).then(async browser => {
+puppeteer.launch({headless: true}).then(async browser => {
 
   //open a new page and navigate to URL
   const page = await browser.newPage();
-  const page2 = await browser.newPage();
-  //await page2.goto('https://www.sneakerfiles.com/release-dates/');
+  //const page2 = await browser.newPage();
+
   await page.goto('https://sneakernews.com/release-dates/'); //url
+  //await page2.goto('https://www.sneakerfiles.com/release-dates/'); //url
+
   await page.click('.load-more-button',{waitUntil: 'load'}); //click more releases button
   
   //await page.click('.load-more-button', {waitUntil: 'load'}); //click more releases button 
