@@ -6,7 +6,8 @@ const csvWriter = createObjectCsvWriter({
   header: [
     {id: 'productTitle', title: 'NAME'},
     {id: 'productDate', title: 'RELEASE-DATE'},
-    {id: 'productPrice', title: 'PRICE'}
+    {id: 'productPrice', title: 'PRICE'},
+    {id: 'productImg', title: 'IMAGE'}
   ]
 });
 
@@ -14,7 +15,7 @@ const csvWriter = createObjectCsvWriter({
 
 //start puppeteer
 
-puppeteer.launch({headless: true}).then(async browser => {
+puppeteer.launch({headless: false}).then(async browser => {
 
   //open a new page and navigate to URL
   const page = await browser.newPage();
@@ -41,11 +42,13 @@ puppeteer.launch({headless: true}).then(async browser => {
       let productTitle = item.querySelector('h2'); 
       let productDate = item.querySelector('.release-date');
       let productPrice = item.querySelector('.release-price');
+      let productImg = item.querySelector('.image-box img');
 
       scrapeItems.push({
         productTitle: productTitle ? productTitle.innerText : null,
         productDate: productDate ? productDate.innerText : null,
         productPrice: productPrice ? productPrice.innerText : null,
+        productImg: productImg ? productImg.getAttribute('src') : null,
 
        
       });
