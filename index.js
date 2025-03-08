@@ -2,11 +2,12 @@ import puppeteer from 'puppeteer';
 import * as fs from 'node:fs';
 import {createObjectCsvWriter} from 'csv-writer';
 const csvWriter = createObjectCsvWriter({
-  path:'results.csv',
+  path:'results2.csv',
   header: [
     {id: 'productTitle', title: 'NAME'},
     {id: 'productDate', title: 'RELEASE-DATE'},
-    {id: 'productPrice', title: 'PRICE'}
+    //{id: 'productPrice', title: 'PRICE'},
+    {id: 'productImg', title: 'IMAGE'}
   ]
 });
 
@@ -21,20 +22,22 @@ puppeteer.launch({headless: false}).then(async browser => {
   //accessing the page content 
   let products = await page.evaluate(() => {
 
-    let allProducts = document.body.querySelectorAll('.entry-content-wrap .kt-blocks-post-grid-item-inner'); // shared class name of targets
+    let allProducts = document.body.querySelectorAll('.entry-content-wrap .kt-blocks-post-grid-item'); // shared class name of targets
 
     //storing the product itmes in array
 
     scrapeItems = [];
     allProducts.forEach(item => {
 
-      let productTitle = item.querySelector('h3'); 
-      let productDate = item.querySelector('p');
+      let productTitle = item.querySelector('.entry-title'); 
+      let productDate = item.querySelector('.release-date');
+      let productImg = item.querySelector('.kadence-post-image-inner-intrisic img');
       
 
       scrapeItems.push({
         productTitle: productTitle ? productTitle.innerText : null,
         productDate: productDate ? productDate.innerText : null,
+        productImg: productImg ? productImg.getAttribute('src') : null,
         
       });
 
